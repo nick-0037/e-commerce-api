@@ -9,9 +9,6 @@ module.exports = (sequelize, DataTypes) => {
     async validatePassword(password) {
       return bcrypt.compare(password, this.password);
     }
-    static associate(models) {
-      // define association here
-    }
   }
   User.init({
     email: {
@@ -34,6 +31,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
+    },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'user',
+      validate: {
+        isIn: [['user', 'admin']]
+      }
     }
   }, {
     sequelize,
