@@ -44,6 +44,26 @@ class productController {
       res.status(400).json({ message: err.message });
     }
   };
+
+  async getAllProducts(req, res) {
+    try {
+      const products = await productService.getAllProducts();
+      res.status(200).json(products);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  };
+
+  async searchProducts(req, res) {
+    try {
+      const { query } = req.query;
+      const products = await productService.searchProducts(query);
+      
+      res.status(200).json(products);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  }
 };
 
 module.exports = new productController();
