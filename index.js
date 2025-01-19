@@ -16,6 +16,9 @@ router.post('/admin/products/:id', productController.addProduct);
 router.patch('/admin/products/:id/price', productController.updatePrice);
 router.patch('/admin/products/:id/inventory', productController.updateInventory);
 
+router.get('/products', productController.getAllProducts);
+router.get('/products/search', productController.searchProducts);
+
 const PORT = 3000;
 
 app.listen(PORT, () => {
