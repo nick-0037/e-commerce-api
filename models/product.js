@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     static associate(models) {
       Product.belongsToMany(models.Cart, { through: 'CartItem', foreignKey: 'productId'});
-      Product.belongsToMany(models.Order, { through: 'OrderItem', foreignKey: 'productId'})
     }
   }
   Product.init({
@@ -21,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
+      defaultValue: 0,
       validate: {
         isDecimal: true,
         min: 0
