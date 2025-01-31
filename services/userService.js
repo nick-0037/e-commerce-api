@@ -6,6 +6,13 @@ class UserService {
   async createUser(data) {
     const { email, username, password } = data;
 
+    const existingUser = await User.findOne({ where: { email }});
+    if (existingUser) {
+      const error = new Error('Email is already in use');
+      error.statusCode = 400;
+      throw error;
+    }
+
     const user = await User.create({ email, username, password });
     
     return {
