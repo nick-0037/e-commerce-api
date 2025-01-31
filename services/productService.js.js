@@ -1,14 +1,21 @@
-const { Product } = require('../models/product');
+const db = require('../models');
+const Product = db.Product;
+const { Op } = require('sequelize');
 
 class productService {
   async addProduct(productData) {
-    return await Product.create(productData);
+    const { name, description, price = 0, stock = 0 } = productData;
+    return await Product.create({
+      name, description, price, stock
+    });
   };
 
   async updatePrice(productId, newPrice) {
     const product = await Product.findByPk(productId);
     if(!product) {
-      throw new Error('Product not found');
+      const error = new Error('Product not found');
+      error.statusCode = 404;
+      throw error;
     }
     product.price = newPrice;
     await product.save();
@@ -18,7 +25,9 @@ class productService {
   async updateInventory(productId, newStock) {
     const product = await Product.findByPk(productId);
     if(!product) {
-      throw new Error('Product not found');
+      const error = new Error('Product not found');
+      error.statusCode = 404;
+      throw error;
     }
     product.stock = newStock;
     await product.save();
