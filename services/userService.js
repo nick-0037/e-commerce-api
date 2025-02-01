@@ -15,10 +15,7 @@ class UserService {
 
     const user = await User.create({ email, username, password });
     
-    return {
-      message: 'User registered successfully',
-      user
-    };
+    return user;
   };
   
   async loginUser({ username, password }) {
@@ -32,10 +29,7 @@ class UserService {
       throw error;
     }
 
-    return { 
-      message: 'Login successful',
-      user
-    };
+    return user;
   };
   
   static async findUserByUsername(username) {
