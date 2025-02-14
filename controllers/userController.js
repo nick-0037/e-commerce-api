@@ -11,11 +11,11 @@ class UserController {
       });
 
       res.status(201).json({
-        message: 'User created successfully',
-        user
+        message: "User created successfully",
+        user,
       });
     } catch (err) {
-        next(err);
+      next(err);
     }
   }
 
@@ -29,12 +29,12 @@ class UserController {
       const token = userService.generateAuthToken(user);
 
       res.status(200).json({
-        message: 'Login successful',
+        message: "Login successful",
         user,
         token,
       });
     } catch (err) {
-        next(err);
+      next(err);
     }
   }
 }
