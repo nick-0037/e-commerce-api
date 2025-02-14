@@ -6,11 +6,21 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
+    static associate(models) {
+      User.hasMany(models.Cart, { foreignKey: 'userId' });
+    }
+
     async validatePassword(password) {
       return bcrypt.compare(password, this.password);
     }
   }
   User.init({
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -43,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
+    tableName: 'users',
     hooks: {
       beforeCreate: async (user) => {
         const salt = await bcrypt.genSalt(10);
