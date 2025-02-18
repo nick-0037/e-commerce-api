@@ -37,6 +37,15 @@ class UserController {
       next(err);
     }
   }
+
+  async getUserFromToken(req, res, next) {
+    try {
+      const user = await userService.getUserFromToken(req.headers.authorization);
+      res.status(200).json(user)
+    } catch(err) {
+      next(err)
+    }
+  }
 }
 
 module.exports = new UserController();
