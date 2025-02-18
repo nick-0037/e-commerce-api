@@ -1,0 +1,294 @@
+/* Estilos generales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+main {
+  max-width: 1240px;
+  margin: 40px;
+  padding: 20px;
+}
+
+/* Sección principal del panel */
+.admin-panel {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 80vh;
+  height: auto;
+}
+
+.admin-panel__title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.admin-panel__actions {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.admin-panel__button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.admin-panel__button:hover {
+  background-color: #0056b3;
+}
+
+.admin-panel__button--add {
+  margin-left: 10px;
+}
+
+.admin-panel__button--decrease,
+.admin-panel__button--increase {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+.admin-panel__button--decrease:hover,
+.admin-panel__button--increase:hover {
+  background-color: #e1e1e1;
+}
+
+.admin-panel__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-panel__table-head {
+  background-color: #007bff;
+  color: white;
+}
+
+.admin-panel__table-row {
+  text-align: center;
+}
+
+.admin-panel__table-header {
+  padding: 10px;
+  font-size: 16px;
+}
+
+.admin-panel__table-cell {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.admin-panel__table-cell button {
+  margin: 0 5px;
+}
+
+/* Estilos del modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal__content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+}
+
+.modal__title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.modal__label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.modal__input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.modal__button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.modal__button--save {
+  background-color: #28a745;
+  color: white;
+}
+
+.modal__button--save:hover {
+  background-color: #218838;
+}
+
+.modal__button--close {
+  background-color: #dc3545;
+  color: white;
+}
+
+.modal__button--close:hover {
+  background-color: #c82333;
+}
+
+#descriptionModal .modal__content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 800px;
+  max-height: 600px;
+  background: white;
+  overflow: hidden;
+}
+
+#descriptionModal .modal__text {
+  font-size: 18px;
+  line-height: 1.5;
+  padding: 10px;
+  overflow-y: auto; 
+  flex: 1;
+}
+
+#descriptionModal .modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  background: #f1f1f1;
+  border-top: 1px solid #ddd;
+}
+
+#descriptionModal .modal__footer button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#descriptionModal .modal__footer button:hover {
+  background-color: #0056b3;
+}
+
+/* Para visibilidad de los modales */
+.modal.show {
+  display: flex;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  /* Panel y elementos generales */
+  .admin-panel {
+    padding: 20px;
+  }
+
+  .admin-panel__title {
+    font-size: 20px; 
+  }
+
+  .admin-panel__actions {
+    flex-direction: column; 
+    align-items: flex-start; 
+  }
+
+  .admin-panel__button {
+    font-size: 14px; 
+    padding: 8px 16px; 
+    width: 100%; 
+    margin: 0 0 10px 0;
+  }
+
+  .admin-panel__table {
+    font-size: 14px; 
+    overflow-x: auto; 
+    display: block;
+  }
+
+  .admin-panel__table-head {
+    font-size: 12px; 
+  }
+
+  .admin-panel__table-cell {
+    font-size: 12px; 
+    padding: 8px; 
+  }
+
+  .modal__content {
+    width: 90%; 
+    max-width: 400px; 
+  }
+
+  .modal__input {
+    font-size: 14px; 
+  }
+
+  .modal__button {
+    font-size: 14px; 
+    padding: 8px 16px; 
+  }
+} 
+
+/* Responsividad para pantallas más pequeñas */
+@media (max-width: 480px) {
+  .admin-panel__title {
+    font-size: 18px;
+  }
+
+  .admin-panel__actions {
+    width: 100%; 
+    margin-bottom: 10px; 
+  }
+
+  .admin-panel__button {
+    font-size: 12px; 
+    padding: 6px 12px; 
+    width: 100%;
+  }
+
+  .admin-panel__table-cell {
+    font-size: 12px;
+    padding: 6px; 
+  }
+
+  .modal__content {
+    width: 95%; 
+  }  
+}
