@@ -12,7 +12,7 @@ router.post('/products', isAdmin, productValidation.addProduct, validationMiddle
 router.patch('/products/:id/price', isAdmin, productValidation.updatePrice, validationMiddleware, productController.updatePrice);
 router.patch('/products/:id/inventory', isAdmin, productValidation.updateInventory, validationMiddleware, productController.updateInventory);
 
-router.get('/products', authMiddleware, productController.getAllProducts);
+router.get('/products', productController.getAllProducts);
 router.get('/products/search', authMiddleware, productValidation.searchProducts, validationMiddleware, productController.searchProducts);
 
 module.exports = router;
