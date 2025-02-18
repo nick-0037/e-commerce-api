@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>admin panel</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  
+  <main class="main">
+    <section class="admin-panel">
+      <h2 class="admin-panel__title">Admin Panel</h2>
+    
+      <div class="admin-panel__actions">
+        <button class="admin-panel__button admin-panel__button--add" onclick="openAddProductModal()">Add Product</button>
+      </div>
+    
+      <table class="admin-panel__table">
+        <thead class="admin-panel__table-head">
+          <tr class="admin-panel__table-row">
+            <th class="admin-panel__table-header">ID</th>
+            <th class="admin-panel__table-header">Name</th>
+            <th class="admin-panel__table-header">Price</th>
+            <th class="admin-panel__table-header">Stock</th>
+            <th class="admin-panel__table-header">Description</th>
+          </tr>
+        </thead>
+        <tbody class="admin-panel__table-body">
+           <!-- Aquí se generarán los productos con JS -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Modal para agregar productos -->
+    <div class="modal" id="addProductModal">
+      <div class="modal__content">
+        <h3 class="modal__title">Add Product</h3>
+        <label class="modal__label">Name:</label>
+        <input type="text" id="productName" class="modal__input">
+        
+        <label class="modal__label">Price:</label>
+        <input type="number" id="productPrice" class="modal__input">
+        
+        <label class="modal__label">Stock:</label>
+        <input type="number" id="productStock" class="modal__input">
+
+        <label class="modal__label">Description:</label>
+        <input type="text" id="productDescription" class="modal__input">
+        
+        <button class="modal__button modal__button--save" onclick="addProduct()">Save</button>
+        <button class="modal__button modal__button--close" onclick="closeAddProductModal()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Modal para editar el precio del producto -->
+    <div class="modal" id="editPriceModal">
+      <div class="modal__content">
+        <h3 class="modal__title">Edit Price</h3>
+        <label class="modal__label">New Price:</label>
+        <input type="number" id="newProductPrice" class="modal__input">
+        
+        <button class="modal__button modal__button--save">Save</button>
+        <button class="modal__button modal__button--close" onclick="closeEditPriceModal()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Modal para ver la descripcion-->
+    <div class="modal" id="descriptionModal">
+      <div class="modal__content">
+        <h3 class="modal__title">Product Description</h3>
+        <p id="modalDescription" class="modal__text"></p>
+        <button class="modal__button modal__button--close" onclick="closeDescriptionModal()">Close</button>
+      </div>
+    </div>
+
+  </main>
+
+  <script type="module" src="/js/admin.js"></script>
+
+</body>
+</html>
