@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <link rel="stylesheet" href="/css/register.css">
+</head>
+<body>
+  <main class="register">
+    <h1 class="register__title">Register</h1>
+  
+    <form class="register__form" action="/register" method="POST">
+      <label class="register__label" for="username">Username:</label>
+      <input class="register__input" type="text" id="username" name="username" required>
+  
+      <label class="register__label" for="email">Email:</label>
+      <input class="register__input" type="email" id="email" name="email" required>
+  
+      <label class="register__label" for="password">Password:</label>
+      <input class="register__input" type="password" id="password" name="password" required>
+  
+      <button class="register__button" type="submit">Register</button>
+    </form>
+
+    <p class="register__error-message" style="display:none;"></p>
+
+    <p class="register__redirect">
+      Already have an account? <a href="/login" class="register__link">Sign in</a>
+    </p>
+  <script type="module" src="/js/register.js"></script>
+</body>
+</html>
