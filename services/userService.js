@@ -44,6 +44,22 @@ class UserService {
     return user;
   }
 
+  async getUserFromToken(authHeader) {
+    if (!authHeader) {
+      const error = new Error("Unauthorized");
+      error.statusCode = 401;
+      throw error;
+    }
+
+    const token = authHeader.split(' ')[1];
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findOne({ where: { id: decoded.userId} });
+
+    return user
+  }
+
   generateAuthToken(user) {
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role },
