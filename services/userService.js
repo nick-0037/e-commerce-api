@@ -51,13 +51,13 @@ class UserService {
       throw error;
     }
 
-    const token = authHeader.split(' ')[1];
-    
+    const token = authHeader.split(" ")[1];
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await User.findOne({ where: { id: decoded.userId} });
+    const user = await User.findOne({ where: { id: decoded.userId } });
 
-    return user
+    return user;
   }
 
   generateAuthToken(user) {
