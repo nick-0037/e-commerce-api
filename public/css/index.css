@@ -1,0 +1,130 @@
+/* Estilos generales */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 40px;
+  background-color: #f5f5f5;
+  box-sizing: border-box;
+}
+
+/* Header principal */
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+/* Bloque de usuario */
+.user {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.user__name {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.user__actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.user__link {
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+/* Estilos específicos */
+.user__link--register {
+  background-color: #007bff;
+  color: white;
+}
+
+.user__link--login {
+  background-color: #28a745;
+  color: white;
+}
+
+.user__link--logout {
+  background-color: #dc3545;
+  color: white;
+}
+
+.user__link--logout {
+  background-color: #dc3545;
+  color: white;
+}
+
+.user__link--admin {
+  background-color: #ffc107;
+  color: white;
+}
+
+.user__link--register:hover {
+  background-color: #0056b3;
+}
+
+.user__link--login:hover {
+  background-color: #218838;
+}
+
+.user__link--logout:hover {
+  background-color: #c82333;
+}
+
+.user__link--admin:hover {
+  background-color: #e0a800;
+}
+
+/* Sección de productos */
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.product {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.no-break {
+  white-space: nowrap;
+}
+
+.product:hover {
+  transform: scale(1.05);
+}
+
+.product__title {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.product__image {
+  width: 100%;
+  height: auto;
+  max-width: 200px;
+  border-radius: 5px;
+}
+
+.product__description {
+  font-size: 14px;
+  color: #666;
+  margin: 10px 0;
+}
+
+.product__price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #28a745;
+}
