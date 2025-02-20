@@ -36,6 +36,14 @@ class cartService {
     return item;
   }
 
+  async getCart(userId) {
+    const cart = await Cart.findOne({ userId });
+    if (!cart) {
+      throw new Error("Cart not found");
+    }
+    return cart;
+  }
+
   async removeFromCart(userId, productId) {
     const cart = await cartService.getCartByUser(userId);
     const item = await CartItem.findOne({
