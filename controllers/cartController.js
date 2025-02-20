@@ -16,6 +16,20 @@ class cartController {
     }
   }
 
+  async getCart(req, res) {
+    try {
+      const { userId } = req.params;
+      const cart = await cartService.getCart(userId);
+  
+      res.status(200).json({
+        message: "Cart fetched successfully",
+        cart,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async removeFromCart(req, res) {
     try {
       const { userId, productId } = req.params;
@@ -45,7 +59,7 @@ class cartController {
   async checkout(req, res) {
     try {
       const { userId } = req.params;
-      const { message, paymentIntent } = await cartService.checkout(userId);
+      const { paymentIntent } = await cartService.checkout(userId);
 
       res.status(200).json({
         message: "Checkout successfully",
