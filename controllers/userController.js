@@ -30,7 +30,6 @@ class UserController {
 
       res.status(200).json({
         message: "Login successful",
-        user,
         token,
       });
     } catch (err) {
@@ -41,7 +40,9 @@ class UserController {
   async getUserFromToken(req, res, next) {
     try {
       const user = await userService.getUserFromToken(req.headers.authorization);
-      res.status(200).json(user)
+      res.status(200).json({
+        user,
+      })
     } catch(err) {
       next(err)
     }

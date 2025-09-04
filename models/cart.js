@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      status: {
+      paymentStatus: {
         type: DataTypes.ENUM("pending", "completed", "cancelled"),
         defaultValue: "pending",
         allowNull: false,

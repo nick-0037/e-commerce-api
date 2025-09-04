@@ -14,3 +14,14 @@ export function getUserIdFromToken(token) {
     return null;
   }
 }
+
+export function getToken() {
+  return localStorage.getItem("token");
+}
+
+export function extractUser(response) {
+  if (response && response.user) {
+    return response.user;
+  }
+  return null;
+}

@@ -34,6 +34,9 @@ class productController {
       const productId = req.params.id;
       const productInventory = req.body.stock;
 
+      console.log(productInventory, " productInventory");
+      console.log(productId, " productId");
+
       const product = await productService.updateInventory(
         productId,
         productInventory
@@ -50,7 +53,9 @@ class productController {
   async getAllProducts(req, res, next) {
     try {
       const products = await productService.getAllProducts();
-      res.status(200).json(products);
+      res.status(200).json({
+        products,
+      });
     } catch (err) {
       next(err);
     }
@@ -61,7 +66,9 @@ class productController {
       const { q } = req.query;
       const products = await productService.searchProducts(q);
 
-      res.status(200).json(products);
+      res.status(200).json({
+        products,
+      });
     } catch (err) {
       next(err);
     }

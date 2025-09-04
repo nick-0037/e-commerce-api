@@ -1,199 +1,122 @@
-async function loadProducts() {
-  try {
-    const response = await fetch("/api/products");
-    if (!response.ok) {
-      throw new Error("Error loading products");
-    }
+import { renderAdminProducts, openModal, closeModal, openDescriptionModal, openEditPriceModal } from "./ui/adminUI.js";
+import { fetchProducts, addProduct, updatePrice, updateStock } from "./services/products.js";
 
-    const products = await response.json();
-    renderProducts(products);
-  } catch (err) {
-    console.error("Error", err);
-    document.querySelector(".admin-panel__table-body").innerHTML = `
-      <tr><td colspan="4" class="admin-panel__table-cell">Failed to load products</td></tr>
-    `;
+document.addEventListener("DOMContentLoaded", async () => {
+  const products = await fetchProducts();
+  renderAdminProducts(products);
+
+  document.querySelector(".admin-panel__table")
+    .addEventListener("click", handleTableClick);
+  
+  document.getElementById("saveProductButton")
+    .addEventListener("click", handleSaveProduct);
+  
+  document.getElementById("saveEditPriceButton")
+    .addEventListener("click", handleSaveEditPrice);
+
+  document.getElementById("addProductButton")
+    .addEventListener("click", () => openModal("addProductModal"));
+    
+  document.getElementById("cancelAddProductButton")
+    .addEventListener("click", () => closeModal("addProductModal"));
+  
+  document.getElementById("cancelEditPriceButton")
+    .addEventListener("click", () => closeModal("editPriceModal"));
+  
+  document.getElementById("closeDescriptionButton")
+    .addEventListener("click", () => closeModal("descriptionModal"));
+});
+
+export function handleTableClick(event) {
+  const button = event.target.closest("button");
+  if (!button) return;
+
+  const action = button.dataset.action;
+  const productId = parseInt(button.dataset.productId);
+
+  if (action && !isNaN(productId)) {
+    switch (action) {
+      case "increase":
+        updateStockDOM(productId, 1);
+        break;
+      case "decrease":
+        updateStockDOM(productId, -1);
+        break;
+      case "view-desc":
+        openDescriptionModal(productId);
+        break;
+      case "edit-price":
+        openEditPriceModal(productId);
+        break;
+    }
   }
 }
 
-function renderProducts(products) {
-  const tBody = document.querySelector(".admin-panel__table-body");
-  tBody.innerHTML = products
-    .map(
-      (product) => `
-    <tr class="admin-panel__table-row" data-id="${product.id}" data-description="${product.description}">
-      <td class="admin-panel__table-cell">${product.id}</td>
-      <td class="admin-panel__table-cell">${product.name}</td>
-      <td class="admin-panel__table-cell ">$${product.price}</td>
-      <td class="admin-panel__table-cell">
-        <button class="admin-panel__button admin-panel__button--decrease" onclick="updateStock(${product.id}, -1)">-</button>
-        <span class="admin-panel__stock">${product.stock}</span>
-        <button class="admin-panel__button admin-panel__button--increase" onclick="updateStock(${product.id}, 1)">+</button>
-      </td>
-      <td class="admin-panel__table-cell">
-        <button class="admin-panel__button admin-panel__button--view-desc" onclick="openDescriptionModal(${product.id})">
-          See description
-        </button>  
-      </td>
-      <td class="admin-panel__table-cell">
-        <button class="admin-panel__button admin-panel__button--edit-price" onclick="openEditPriceModal(${product.id})">Edit Price</button>
-      </td>
-    </tr>
-  `
-    )
-    .join("");
-}
-
-async function addProduct() {
-  const name = document.getElementById("productName").value;
+async function handleSaveProduct() {
+  const name = document.getElementById("productName").value.trim();
   const price = parseFloat(document.getElementById("productPrice").value) || 0;
   const stock = parseInt(document.getElementById("productStock").value) || 0;
-  const description = document.getElementById("productDescription").value;
+  const description = document.getElementById("productDescription").value.trim();
 
-  if (!name) {
-    alert("Invalid input");
+  if (!name || !description) {
+    alert("Product name and description are required");
     return;
   }
 
   try {
-    const token = localStorage.getItem("token");
+    const response = await addProduct({ name, description, price, stock });
 
-    const response = await fetch("/api/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ name, description, price, stock }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error("Error adding product");
+    if (response.success) {
+      const products = await fetchProducts();
+      renderAdminProducts(products);
+      closeModal("addProductModal");
+    } else {
+      throw new Error("Failed to add product")
     }
 
-    closeAddProductModal();
-    loadProducts();
   } catch (err) {
-    console.error("Error:", err);
+    console.error("Error adding product:", err);
     alert("Error adding product");
   }
 }
 
-async function updatePrice(id, price) {
-  try {
-    const token = localStorage.getItem("token");
-
-    const response = await fetch(`/api/products/${id}/price`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ price }),
-    });
-
-    if (!response.ok) throw new Error("Error updating price");
-  } catch (err) {
-    console.error("Error:", err);
-    alert("Error updating price");
-  }
-}
-
-async function updateStock(id, change) {
-  const row = document.querySelector(`tr[data-id="${id}"]`);
-  if (!row) return;
-
-  const stockElement = row.querySelector(".admin-panel__stock");
-  let newStock = parseInt(stockElement.textContent) + change;
-
-  if (newStock < 0) return;
-
-  try {
-    const token = localStorage.getItem("token");
-
-    const response = await fetch(`/api/products/${id}/inventory`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ stock: newStock }),
-    });
-
-    if (!response.ok) throw new Error("Error updating stock");
-
-    stockElement.textContent = newStock;
-  } catch (err) {
-    console.error("Error:", err);
-    alert("Error updating stock");
-  }
-}
-
-let currentEditingProductId = null;
-
-const saveButton = document.querySelector(
-  "#editPriceModal .modal__button--save"
-);
-
-saveButton.addEventListener("click", () => {
-  if (currentEditingProductId !== null) {
-    handleSaveClick(currentEditingProductId);
-  }
-});
-
-function openEditPriceModal(id) {
-  currentEditingProductId = id;
-  const product = document.querySelector(`tr[data-id="${id}"]`);
-  const currentPrice = product
-    .querySelector("td:nth-child(3)")
-    .textContent.replace("$", "");
-
-  document.getElementById("newProductPrice").value = currentPrice;
-  document.getElementById("editPriceModal").classList.add("show");
-}
-
-async function handleSaveClick(id) {
-  const newPrice = parseFloat(document.getElementById("newProductPrice").value);
+async function handleSaveEditPrice() {
+  const productId = document.getElementById("saveEditPriceButton").dataset.productId;
+  const newPrice = parseFloat(
+    document.getElementById("newProductPrice").value
+  );
   if (isNaN(newPrice) || newPrice <= 0) {
     alert("Invalid price");
     return;
   }
 
-  await updatePrice(id, newPrice);
+  try {
+    await updatePrice(productId, newPrice);
+    
+    const productRow = document.querySelector(`tr[data-id="${productId}"]`);
+    const priceCell = productRow.querySelector("td:nth-child(3)");
+    priceCell.textContent = `$${newPrice.toFixed(2)}`;
 
-  const productRow = document.querySelector(`tr[data-id="${id}"]`);
-  const priceCell = productRow.querySelector("td:nth-child(3)");
-  priceCell.textContent = `$${newPrice.toFixed(2)}`;
-
-  closeEditPriceModal();
-  currentEditingProductId = null;
+    closeModal("editPriceModal")
+  } catch (err) {
+    console.error("Error updating price:", err);
+    alert("Error updating price");
+  }
 }
 
-function closeEditPriceModal() {
-  document.getElementById("editPriceModal").classList.remove("show");
+async function updateStockDOM(productId, change) {
+  const row = document.querySelector(`tr[data-id="${productId}"]`);
+  const stockSpan = row.querySelector(".admin-panel__stock");
+  const currentStock = parseInt(stockSpan.textContent);
+  const newStock = currentStock + change;
+
+  if (newStock < 0) return
+
+  try { 
+    await updateStock(productId, newStock);
+    stockSpan.textContent = newStock;
+  } catch (err) {
+    console.error("Error updating stock:", err);
+    alert("Error updating stock");
+  }
 }
-
-function openAddProductModal() {
-  document.getElementById("addProductModal").classList.add("show");
-}
-
-function closeAddProductModal() {
-  document.getElementById("addProductModal").classList.remove("show");
-}
-
-function openDescriptionModal(id) {
-  const productRow = document.querySelector(`tr[data-id="${id}"]`);
-  const description = productRow.getAttribute("data-description");
-
-  document.getElementById("modalDescription").textContent = description;
-  document.getElementById("descriptionModal").classList.add("show");
-  document.body.classList.add("modal-open");
-}
-
-function closeDescriptionModal() {
-  document.getElementById("descriptionModal").classList.remove("show");
-  document.body.classList.remove("modal-open");
-}
-
-document.addEventListener("DOMContentLoaded", loadProducts);

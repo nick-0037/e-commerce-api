@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete your payment</title>
+  <script type="module" src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <form id="payment__form">
+    <div id="card__element"></div>
+    <button type="submit">Pay Now</button>
+  </form>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const stripe = Stripe("pk_test_51QjQutRuZbBcqS1xwcTOPHaRxpJqAXlezu84hAA3Gr4Wfw9D9O7oPZZXnbYUOYYNSbugfkpW8VqxKCwOr6jwF0FR009U4NSkt5");
+      const clientSecret = new URLSearchParams(window.location.search).get("clientSecret");
+
+      const elements = stripe.elements();
+      const cardElement = elements.create("card");
+      cardElement.mount("#card__element");
+
+      document.getElementById("payment__form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              name: "Customer Name",
+            }
+          }
+        });
+
+        if (error) {
+          console.error("Error processing payment:", error);
+          alert("Payment failed: " + error.message);
+        } else if (paymentIntent.status === "succeeded") {
+          alert("Payment successful!");
+        }
+      })
+
+    })
+
+  </script>
+</body>
+</html>

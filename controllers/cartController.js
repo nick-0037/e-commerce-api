@@ -16,14 +16,15 @@ class cartController {
     }
   }
 
-  async getCart(req, res) {
+  async getCartByUser(req, res, next) {
     try {
       const { userId } = req.params;
-      const cart = await cartService.getCart(userId);
-  
+      const cart = await cartService.getCartByUser(userId);
+
       res.status(200).json({
         message: "Cart fetched successfully",
         cart,
+        items: cart.items,
       });
     } catch (err) {
       next(err);
@@ -56,42 +57,14 @@ class cartController {
     }
   }
 
-  async checkout(req, res) {
+  async updateCartPaymentStatus(req, res) {
     try {
       const { userId } = req.params;
-      const { paymentIntent } = await cartService.checkout(userId);
+      const { status } = req.body;
 
+      await cartService.updateCartPaymentStatus(userId, status);
       res.status(200).json({
-        message: "Checkout successfully",
-        paymentIntent,
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async completedCheckout(req, res) {
-    try {
-      const { userId } = req.params;
-      const { cart } = await cartService.completedCheckout(userId);
-
-      res.status(200).json({
-        message: "Checkout completed successfully",
-        cart,
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async cancelledCheckout(req, res) {
-    try {
-      const { userId } = req.params;
-      const { cart } = await cartService.cancelCart(userId);
-
-      res.status(200).json({
-        message: "Cart cancelled successfully",
-        cart,
+        message: "Cart payment status updated",
       });
     } catch (err) {
       next(err);
